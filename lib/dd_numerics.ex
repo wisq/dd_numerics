@@ -1,18 +1,12 @@
-defmodule DdNumerics do
-  @moduledoc """
-  Documentation for DdNumerics.
-  """
+defmodule DDNumerics do
+  use Application
 
-  @doc """
-  Hello world.
+  def start(_type, _args) do
+    children = [
+      Plug.Cowboy.child_spec(scheme: :http, plug: DDNumerics.Router, options: [port: 4001])
+    ]
 
-  ## Examples
-
-      iex> DdNumerics.hello()
-      :world
-
-  """
-  def hello do
-    :world
+    opts = [strategy: :one_for_one, name: DDNumerics.Supervisor]
+    Supervisor.start_link(children, opts)
   end
 end

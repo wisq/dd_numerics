@@ -1,8 +1,8 @@
-defmodule DdNumericsTest do
+defmodule DDNumericsTest do
   use ExUnit.Case
-  doctest DdNumerics
+  doctest DDNumerics
 
   test "greets the world" do
-    assert DdNumerics.hello() == :world
+    assert DDNumerics.hello() == :world
   end
 end

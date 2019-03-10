@@ -1,4 +1,4 @@
-# DdNumerics
+# DDNumerics
 
 **TODO: Add description**
 

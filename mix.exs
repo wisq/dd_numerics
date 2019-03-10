@@ -1,4 +1,4 @@
-defmodule DdNumerics.MixProject do
+defmodule DDNumerics.MixProject do
   use Mix.Project
 
   def project do
@@ -14,6 +14,7 @@ defmodule DdNumerics.MixProject do
   # Run "mix help compile.app" to learn about applications.
   def application do
     [
+      mod: {DDNumerics, []},
       extra_applications: [:logger]
     ]
   end
@@ -23,6 +24,8 @@ defmodule DdNumerics.MixProject do
     [
       # {:dep_from_hexpm, "~> 0.3.0"},
       # {:dep_from_git, git: "https://github.com/elixir-lang/my_dep.git", tag: "0.1.0"}
+      {:httpoison, "~> 0.13"},
+      {:plug_cowboy, "~> 2.0"}
     ]
   end
 end
