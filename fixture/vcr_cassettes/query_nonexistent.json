@@ -1,0 +1,38 @@
+[
+  {
+    "request": {
+      "body": "",
+      "headers": [],
+      "method": "get",
+      "options": [],
+      "request_body": "",
+      "url": "https://app.datadoghq.com/api/v1/query?api_key=VCR_DATADOG_API_KEY&application_key=VCR_DATADOG_APPLICATION_KEY&from=1552442240&query=test.nonexistent%7Bhost%3AVCR_DATADOG_HOST%7D&to=1552442840"
+    },
+    "response": {
+      "binary": false,
+      "body": "{\"status\":\"ok\",\"res_type\":\"time_series\",\"from_date\":1552442240000,\"series\":[],\"to_date\":1552442840000,\"resp_version\":1,\"query\":\"test.nonexistent{host:VCR_DATADOG_HOST}\",\"message\":\"\",\"group_by\":[]}",
+      "headers": {
+        "Date": "Wed, 13 Mar 2019 02:07:20 GMT",
+        "Content-Type": "application/json",
+        "Content-Length": "194",
+        "Connection": "keep-alive",
+        "Vary": "Accept-Encoding",
+        "Pragma": "no-cache",
+        "Cache-Control": "no-cache",
+        "Set-Cookie": "DD-PSHARD=203; Max-Age=604800; Path=/; expires=Wed, 20-Mar-2019 02:07:20 GMT; secure; HttpOnly",
+        "X-DD-VERSION": "35.1132751",
+        "X-RateLimit-Limit": "300",
+        "X-RateLimit-Period": "3600",
+        "X-RateLimit-Reset": "3160",
+        "X-RateLimit-Remaining": "294",
+        "X-DD-Debug": "pHuy1eLAqOW1LEF6LpUzUzVA5Uy8/2dOrGc8V4FK0tfd+dUy5GSceSvlIATsBu/O",
+        "DD-POOL": "dogweb_query",
+        "X-Frame-Options": "SAMEORIGIN",
+        "X-Content-Type-Options": "nosniff",
+        "Strict-Transport-Security": "max-age=15724800;"
+      },
+      "status_code": 200,
+      "type": "ok"
+    }
+  }
+]
