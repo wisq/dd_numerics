@@ -1,4 +1,4 @@
-defmodule DDNumerics.Router do
+defmodule DDNumerics.Plug do
   use Plug.Router
 
   plug(:match)

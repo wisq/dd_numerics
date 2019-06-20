@@ -16,7 +16,7 @@ defmodule DDNumerics do
 
   defp children_specs(true) do
     [
-      Plug.Cowboy.child_spec(scheme: :http, plug: DDNumerics.Router, options: [port: 4001])
+      Plug.Cowboy.child_spec(scheme: :http, plug: DDNumerics.Plug, options: [port: 4001])
     ]
   end
 
