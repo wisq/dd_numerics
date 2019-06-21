@@ -4,12 +4,23 @@ if File.exists?("config/datadog.exs") do
   import_config "datadog.exs"
 end
 
+defmodule DDNumerics.Config.Colors do
+  def co2_value(v) do
+    cond do
+      v >= 2000 -> :red
+      v >= 1000 -> :orange
+      true -> :green
+    end
+  end
+end
+
 config :dd_numerics,
   metrics: %{
     co2_current: %{
       type: :value,
       query: "co2mini.co2_ppm{*}",
-      postfix: "ppm"
+      postfix: "ppm",
+      color_fn: {DDNumerics.Config.Colors, :co2_value}
     },
     co2_delta_hour: %{
       type: :value_delta,

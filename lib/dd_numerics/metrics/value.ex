@@ -5,7 +5,8 @@ defmodule DDNumerics.Metrics.Value do
   defstruct(
     query: nil,
     max_age: 300,
-    postfix: ""
+    postfix: "",
+    color_fn: nil
   )
 
   def create(%{} = data), do: struct!(__MODULE__, data)
@@ -29,6 +30,13 @@ defmodule DDNumerics.Metrics.Value do
       data: %{value: value},
       postfix: metric.postfix
     }
+    |> add_color_fn(metric.color_fn, value)
+  end
+
+  defp add_color_fn(data, nil, _value), do: data
+
+  defp add_color_fn(data, {module, function}, value) do
+    Map.put(data, :color, apply(module, function, [value]))
   end
 
   defp time_range(max_age) do
