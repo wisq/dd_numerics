@@ -1,11 +1,6 @@
 defmodule DDNumerics.Datadog do
   alias DDNumerics.Datadog.URI, as: DDURI
 
-  defp now do
-    DateTime.utc_now()
-    |> DateTime.to_unix()
-  end
-
   def query_series({start_time, end_time}, query) do
     DDURI.datadog_uri(
       "v1/query",
