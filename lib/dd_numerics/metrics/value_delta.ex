@@ -14,12 +14,19 @@ defmodule DDNumerics.Metrics.ValueDelta do
   def fetch(%__MODULE__{} = metric) do
     time_range(metric.max_age + metric.period)
     |> Datadog.query_series(metric.query)
-    |> extract_window(metric.max_age, metric.period)
+    |> extract_data(metric)
+  end
+
+  def extract_data(points, metric, now \\ DateTime.utc_now()) do
+    points
+    |> extract_window(metric.max_age, metric.period, now)
     |> output(metric)
   end
 
-  defp extract_window(points, max_age, period) do
-    case find_last_value(points, max_age) do
+  defp extract_window([], _max_age, _period, _now), do: nil
+
+  defp extract_window(points, max_age, period, now) do
+    case find_last_value(points, max_age, now) do
       nil ->
         nil
 
@@ -29,9 +36,9 @@ defmodule DDNumerics.Metrics.ValueDelta do
     end
   end
 
-  defp find_last_value(points, max_age) do
+  defp find_last_value(points, max_age, now) do
     {time, _value} = last = List.last(points)
-    age = DateTime.utc_now() |> DateTime.diff(time, :second)
+    age = now |> DateTime.diff(time, :second)
     if age < max_age, do: last, else: nil
   end
 
@@ -46,17 +53,13 @@ defmodule DDNumerics.Metrics.ValueDelta do
   end
 
   defp find_points_around(points, target_time) do
-    (points ++ [nil])
-    |> Enum.reduce_while(nil, fn
-      {t2, _v2} = p2, p1 ->
-        case DateTime.compare(t2, target_time) do
-          :lt -> {:cont, p2}
-          :gt -> {:halt, {p1, p2}}
-          :eq -> {:halt, {p2, p2}}
-        end
-
-      nil, p1 ->
-        {:halt, {p1, nil}}
+    points
+    |> Enum.reduce_while(nil, fn {t2, _v2} = p2, p1 ->
+      case DateTime.compare(t2, target_time) do
+        :lt -> {:cont, p2}
+        :gt -> {:halt, {p1, p2}}
+        :eq -> {:halt, {p2, p2}}
+      end
     end)
   end
 

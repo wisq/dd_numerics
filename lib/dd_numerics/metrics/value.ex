@@ -13,6 +13,11 @@ defmodule DDNumerics.Metrics.Value do
   def fetch(%__MODULE__{} = metric) do
     time_range(metric.max_age)
     |> Datadog.query_series(metric.query)
+    |> extract_data(metric)
+  end
+
+  def extract_data(points, metric) do
+    points
     |> List.last()
     |> output(metric)
   end
