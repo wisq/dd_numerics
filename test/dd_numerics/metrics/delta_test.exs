@@ -68,4 +68,35 @@ defmodule DDNumerics.Metrics.DeltaTest do
 
     assert Delta.extract_data(points, metric, now) == %{}
   end
+
+  test "extract_data/3 applies postfix" do
+    points = [
+      {DateTime.from_unix!(1001), 100.0},
+      {DateTime.from_unix!(2001), 130.0}
+    ]
+
+    metric = %Delta{query: "dummy", period: 1000, postfix: "rupees"}
+    now = DateTime.from_unix!(2010)
+
+    assert %{postfix: "rupees"} = Delta.extract_data(points, metric, now)
+  end
+
+  def color_fn(value2, value1) do
+    "color for #{value2} and #{value1}"
+  end
+
+  test "extract_data/3 applies color function" do
+    points = [
+      {DateTime.from_unix!(1001), 123.45},
+      {DateTime.from_unix!(2001), 234.56}
+    ]
+
+    now = DateTime.from_unix!(2010)
+
+    metric1 = %Delta{query: "dummy", period: 1000}
+    refute Delta.extract_data(points, metric1, now) |> Map.has_key?(:color)
+
+    metric2 = %Delta{query: "dummy", period: 1000, color_fn: {__MODULE__, :color_fn}}
+    assert %{color: "color for 234.56 and 123.45"} = Delta.extract_data(points, metric2, now)
+  end
 end
