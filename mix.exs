@@ -28,7 +28,8 @@ defmodule DDNumerics.MixProject do
       {:poison, "~> 3.1"},
       {:plug_cowboy, "~> 2.0"},
       {:timex, "~> 3.1"},
-      {:exvcr, "~> 0.10", only: [:dev, :test]}
+      {:exvcr, "~> 0.10", only: [:dev, :test]},
+      {:briefly, "~> 0.3", only: :test}
     ]
   end
 end
