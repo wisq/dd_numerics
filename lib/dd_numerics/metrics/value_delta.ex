@@ -2,13 +2,15 @@ defmodule DDNumerics.Metrics.ValueDelta do
   alias DDNumerics.Datadog
 
   import DDNumerics.Metrics.Common.Windowed
+  import DDNumerics.Metrics.Common.Color
 
   @enforce_keys [:query, :period]
   defstruct(
     query: nil,
     period: nil,
     max_age: 300,
-    postfix: ""
+    postfix: "",
+    color_fn: nil
   )
 
   def create(%{} = data), do: struct!(__MODULE__, data)
@@ -35,6 +37,7 @@ defmodule DDNumerics.Metrics.ValueDelta do
       ],
       postfix: metric.postfix
     }
+    |> add_color_fn(metric.color_fn, [v2, v1])
   end
 
   defp time_range(max_age) do

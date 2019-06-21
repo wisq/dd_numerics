@@ -1,6 +1,8 @@
 defmodule DDNumerics.Metrics.Value do
   alias DDNumerics.Datadog
 
+  import DDNumerics.Metrics.Common.Color
+
   @enforce_keys [:query]
   defstruct(
     query: nil,
@@ -30,13 +32,7 @@ defmodule DDNumerics.Metrics.Value do
       data: %{value: value},
       postfix: metric.postfix
     }
-    |> add_color_fn(metric.color_fn, value)
-  end
-
-  defp add_color_fn(data, nil, _value), do: data
-
-  defp add_color_fn(data, {module, function}, value) do
-    Map.put(data, :color, apply(module, function, [value]))
+    |> add_color_fn(metric.color_fn, [value])
   end
 
   defp time_range(max_age) do

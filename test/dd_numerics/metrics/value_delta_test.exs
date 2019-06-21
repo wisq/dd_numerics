@@ -100,4 +100,35 @@ defmodule DDNumerics.Metrics.ValueDeltaTest do
 
     assert ValueDelta.extract_data(points, metric, now) == %{}
   end
+
+  test "extract_data/2 applies postfix" do
+    points = [
+      {DateTime.from_unix!(1001), 100.0},
+      {DateTime.from_unix!(2001), 130.0}
+    ]
+
+    metric = %ValueDelta{query: "dummy", period: 1000, postfix: "$$$"}
+    now = DateTime.from_unix!(2010)
+
+    assert %{postfix: "$$$"} = ValueDelta.extract_data(points, metric, now)
+  end
+
+  def color_fn(value2, value1) do
+    "color for #{value2} and #{value1}"
+  end
+
+  test "extract_data/2 applies color function" do
+    points = [
+      {DateTime.from_unix!(1001), 100.0},
+      {DateTime.from_unix!(2001), 130.0}
+    ]
+
+    now = DateTime.from_unix!(2010)
+
+    metric1 = %ValueDelta{query: "dummy", period: 1000}
+    refute ValueDelta.extract_data(points, metric1, now) |> Map.has_key?(:color)
+
+    metric2 = %ValueDelta{query: "dummy", period: 1000, color_fn: {__MODULE__, :color_fn}}
+    assert %{color: "color for 130.0 and 100.0"} = ValueDelta.extract_data(points, metric2, now)
+  end
 end

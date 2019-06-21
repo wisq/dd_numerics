@@ -12,6 +12,10 @@ defmodule DDNumerics.Config.Colors do
       true -> :green
     end
   end
+
+  def co2_value_delta(v2, _v1) do
+    co2_value(v2)
+  end
 end
 
 config :dd_numerics,
@@ -26,13 +30,15 @@ config :dd_numerics,
       type: :value_delta,
       query: "co2mini.co2_ppm{*}",
       postfix: "ppm",
-      period: 3600
+      period: 3600,
+      color_fn: {DDNumerics.Config.Colors, :co2_value_delta}
     },
     co2_delta_day: %{
       type: :value_delta,
       query: "co2mini.co2_ppm{*}",
       postfix: "ppm",
-      period: 86400
+      period: 86400,
+      color_fn: {DDNumerics.Config.Colors, :co2_value_delta}
     },
     nonexistent_value: %{
       type: :value,
