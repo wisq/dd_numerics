@@ -3,7 +3,8 @@ defmodule DDNumerics.Metrics do
 
   @types %{
     value: Metrics.Value,
-    value_delta: Metrics.ValueDelta
+    value_delta: Metrics.ValueDelta,
+    delta: Metrics.Delta
   }
 
   @metrics Application.get_env(:dd_numerics, :metrics, %{})

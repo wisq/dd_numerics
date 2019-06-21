@@ -1,4 +1,4 @@
-defmodule DDNumerics.Metrics.ValueDelta do
+defmodule DDNumerics.Metrics.Delta do
   alias DDNumerics.Datadog
 
   import DDNumerics.Metrics.Common.Windowed
@@ -29,10 +29,7 @@ defmodule DDNumerics.Metrics.ValueDelta do
 
   defp output({v1, v2}, metric) do
     %{
-      data: [
-        %{value: v2},
-        %{value: v1}
-      ],
+      data: %{value: v2 - v1},
       postfix: metric.postfix
     }
   end
