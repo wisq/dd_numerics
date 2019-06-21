@@ -82,8 +82,8 @@ defmodule DDNumerics.Metrics.ValueDelta do
   defp output({v1, v2}, metric) do
     %{
       data: [
-        %{value: v1},
-        %{value: v2}
+        %{value: v2},
+        %{value: v1}
       ],
       postfix: metric.postfix
     }

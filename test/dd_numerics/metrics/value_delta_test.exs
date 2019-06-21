@@ -17,10 +17,10 @@ defmodule DDNumerics.Metrics.ValueDeltaTest do
 
     assert %{
              data: [
-               # value at 1002
-               %{value: 106.1},
                # value at 2002
-               %{value: 93.9}
+               %{value: 93.9},
+               # value at 1002
+               %{value: 106.1}
              ]
            } = ValueDelta.extract_data(points, metric, now)
   end
@@ -38,10 +38,10 @@ defmodule DDNumerics.Metrics.ValueDeltaTest do
 
     assert %{
              data: [
-               # interpolated value at 1002
-               %{value: v1},
                # value at 2002
-               %{value: 93.9}
+               %{value: 93.9},
+               # interpolated value at 1002
+               %{value: v1}
              ]
            } = ValueDelta.extract_data(points, metric, now)
 
@@ -62,10 +62,10 @@ defmodule DDNumerics.Metrics.ValueDeltaTest do
 
     assert %{
              data: [
-               # interpolated value at 1002
-               %{value: v1},
                # value at 2002
-               %{value: 205.0}
+               %{value: 205.0},
+               # interpolated value at 1002
+               %{value: v1}
              ]
            } = ValueDelta.extract_data(points, metric, now)
 
@@ -85,10 +85,10 @@ defmodule DDNumerics.Metrics.ValueDeltaTest do
 
     assert %{
              data: [
-               # value at 1005
-               %{value: 105.0},
                # value at 2002
-               %{value: 205.0}
+               %{value: 205.0},
+               # value at 1005
+               %{value: 105.0}
              ]
            } = ValueDelta.extract_data(points, metric, now)
   end
