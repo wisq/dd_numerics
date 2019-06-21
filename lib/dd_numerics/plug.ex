@@ -26,6 +26,6 @@ defmodule DDNumerics.Plug do
   end
 
   defp send_json(data, conn) do
-    send_resp(conn, 200, data |> inspect())
+    send_resp(conn, 200, Poison.encode!(data))
   end
 end
