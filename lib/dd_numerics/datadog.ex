@@ -6,7 +6,7 @@ defmodule DDNumerics.Datadog do
     |> DateTime.to_unix()
   end
 
-  def query_series(query, start_time, end_time) do
+  def query_series({start_time, end_time}, query) do
     DDURI.datadog_uri(
       "v1/query",
       from: to_unix_time(start_time),

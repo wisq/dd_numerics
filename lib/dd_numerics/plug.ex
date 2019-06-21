@@ -1,14 +1,31 @@
 defmodule DDNumerics.Plug do
   use Plug.Router
+  alias DDNumerics.Metrics
 
   plug(:match)
   plug(:dispatch)
 
-  get "/hello" do
-    send_resp(conn, 200, "world")
+  get "/metric/:name" do
+    case Metrics.get(name) do
+      {:ok, metric} ->
+        metric
+        |> Metrics.fetch()
+        |> send_json(conn)
+
+      :error ->
+        not_found(conn)
+    end
   end
 
   match _ do
-    send_resp(conn, 404, "oops")
+    not_found(conn)
+  end
+
+  defp not_found(conn) do
+    send_resp(conn, 404, "not found")
+  end
+
+  defp send_json(data, conn) do
+    send_resp(conn, 200, data |> inspect())
   end
 end

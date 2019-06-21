@@ -21,11 +21,10 @@ defmodule DDNumerics.DatadogTest do
   end
 
   test "query_series/2 queries datapoints from series", %{datadog_host: host} do
-    {start_time, end_time} = time_window(600)
-
     data =
       use_cassette "query_cpu_idle" do
-        Datadog.query_series("system.cpu.idle{host:#{host}}", start_time, end_time)
+        time_window(600)
+        |> Datadog.query_series("system.cpu.idle{host:#{host}}")
       end
 
     # Ensure that our concept of "now" changes
@@ -67,11 +66,10 @@ defmodule DDNumerics.DatadogTest do
   end
 
   test "query_series/2 handles no datapoints in window", %{datadog_host: host} do
-    {start_time, end_time} = time_window(600)
-
     latest =
       use_cassette "query_nonexistent" do
-        Datadog.query_series("test.nonexistent{host:#{host}}", start_time, end_time)
+        time_window(600)
+        |> Datadog.query_series("test.nonexistent{host:#{host}}")
       end
 
     assert latest == []
