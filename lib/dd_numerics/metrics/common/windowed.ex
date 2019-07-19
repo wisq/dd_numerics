@@ -1,4 +1,6 @@
 defmodule DDNumerics.Metrics.Common.Windowed do
+  import DDNumerics.Metrics.Common.Period
+
   def extract_window([], _max_age, _period, _now), do: nil
 
   def extract_window(points, max_age, period, now) do
@@ -19,7 +21,7 @@ defmodule DDNumerics.Metrics.Common.Windowed do
   end
 
   defp find_first_value(points, last_time, period) do
-    target_time = DateTime.add(last_time, -period)
+    {target_time, _} = time_range(period, 0, last_time)
 
     case find_points_around(points, target_time) do
       {nil, {time, value}} -> {time, value}

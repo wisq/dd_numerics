@@ -3,6 +3,8 @@ defmodule DDNumerics.Metrics.ValueDeltaTest do
 
   alias DDNumerics.Metrics.ValueDelta
 
+  defp dt(naive), do: DateTime.from_naive!(naive, "Etc/UTC")
+
   test "extract_data/3 returns points that are exactly <period> apart" do
     points = [
       {DateTime.from_unix!(1001), 93.1},
@@ -130,5 +132,51 @@ defmodule DDNumerics.Metrics.ValueDeltaTest do
 
     metric2 = %ValueDelta{query: "dummy", period: 1000, color_fn: {__MODULE__, :color_fn}}
     assert %{color: "color for 130.0 and 100.0"} = ValueDelta.extract_data(points, metric2, now)
+  end
+
+  test "extract_data/3 handles {:daily, time} period" do
+    metric = %ValueDelta{query: "dummy", period: {:daily, "09:00"}, max_age: 300}
+    now = dt(~N[2019-07-19 09:46:49.082293])
+
+    points = [
+      {dt(~N[2019-07-19 08:45:00]), 93.1},
+      {dt(~N[2019-07-19 09:00:00]), 106.1},
+      {dt(~N[2019-07-19 09:15:00]), 103.3},
+      {dt(~N[2019-07-19 09:30:00]), 97.7},
+      {dt(~N[2019-07-19 09:45:00]), 93.9}
+    ]
+
+    assert %{
+             data: [
+               # value at 09:45
+               %{value: 93.9},
+               # value at 09:00
+               %{value: 106.1}
+             ]
+           } = ValueDelta.extract_data(points, metric, now)
+  end
+
+  test "extract_data/3 interpolates around {:daily, time} start point" do
+    metric = %ValueDelta{query: "dummy", period: {:daily, "09:00"}, max_age: 300}
+    now = dt(~N[2019-07-19 09:46:49.082293])
+
+    points = [
+      {dt(~N[2019-07-19 08:45:00]), 93.1},
+      {dt(~N[2019-07-19 09:15:00]), 103.3},
+      {dt(~N[2019-07-19 09:30:00]), 97.7},
+      {dt(~N[2019-07-19 09:45:00]), 93.9}
+    ]
+
+    assert %{
+             data: [
+               # value at 09:45
+               %{value: 93.9},
+               # interpolated value at 09:00
+               %{value: v1}
+             ]
+           } = ValueDelta.extract_data(points, metric, now)
+
+    # average of values at 08:45 and 09:15
+    assert_in_delta v1, 98.2, 0.001
   end
 end

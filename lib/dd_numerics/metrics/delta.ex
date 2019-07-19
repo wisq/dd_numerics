@@ -3,6 +3,7 @@ defmodule DDNumerics.Metrics.Delta do
 
   import DDNumerics.Metrics.Common.Windowed
   import DDNumerics.Metrics.Common.Color
+  import DDNumerics.Metrics.Common.Period
 
   @enforce_keys [:query, :period]
   defstruct(
@@ -16,12 +17,14 @@ defmodule DDNumerics.Metrics.Delta do
   def create(%{} = data), do: struct!(__MODULE__, data)
 
   def fetch(%__MODULE__{} = metric) do
-    time_range(metric.max_age + metric.period)
+    now = DateTime.utc_now()
+
+    time_range(metric.period, metric.max_age, now)
     |> Datadog.query_series(metric.query)
-    |> extract_data(metric)
+    |> extract_data(metric, now)
   end
 
-  def extract_data(points, metric, now \\ DateTime.utc_now()) do
+  def extract_data(points, metric, now) do
     points
     |> extract_window(metric.max_age, metric.period, now)
     |> output(metric)
@@ -35,11 +38,5 @@ defmodule DDNumerics.Metrics.Delta do
       postfix: metric.postfix
     }
     |> add_color_fn(metric.color_fn, [v2, v1])
-  end
-
-  defp time_range(max_age) do
-    end_time = DateTime.utc_now()
-    start_time = end_time |> DateTime.add(-max_age, :second)
-    {start_time, end_time}
   end
 end
