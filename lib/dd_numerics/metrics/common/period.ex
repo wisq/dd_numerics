@@ -53,25 +53,15 @@ defmodule DDNumerics.Metrics.Common.Period do
     Time.diff(datetime, cutoff_time, :second) < max_age
   end
 
-  # To set the time, we first try to take midnight
-  # and add the corresponding duration.
-  #
-  # This will automatically adjust for any 
-  # timezone shifts, e.g. daylight savings.
-  #
-  # However, we also do a `set` at the end,
-  # to make absolutely sure we get the correct
-  # time, and it hasn't been offset due to DST.
   defp set_time_of_day(datetime, wanted_time) do
-    from_midnight =
-      wanted_time
-      |> Time.diff(~T[00:00:00], :microsecond)
-      |> Timex.Duration.from_microseconds()
-
     datetime
     |> Timex.beginning_of_day()
-    |> Timex.add(from_midnight)
-    |> Timex.set(time: wanted_time, microsecond: {0, 0})
+    |> Timex.shift(
+      hours: wanted_time.hour,
+      minutes: wanted_time.minute,
+      seconds: wanted_time.second
+    )
+    |> Timex.set(microsecond: wanted_time.microsecond)
   end
 
   defp parse_time_of_day(time) when is_binary(time) do
