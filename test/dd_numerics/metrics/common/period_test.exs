@@ -115,11 +115,17 @@ defmodule DDNumerics.Metrics.Common.PeriodTest do
              on_est_day
            }
 
-    # Today, 01:23 EDT (-4) = 04:23 UTC
+    # Today, 01:23 EDT (-4) = 05:23 UTC
     # This is during the "lost hour" of daylight savings.
     # (There's currently no way to specify 01:23 EST.)
     assert Period.time_range({:daily, "01:23", "America/Toronto"}, 1800, on_est_day) == {
              dt(~N[2019-11-03 05:23:00]),
+             on_est_day
+           }
+
+    # Today, 02:23 EST (-5) = 07:23 UTC
+    assert Period.time_range({:daily, "02:23", "America/Toronto"}, 1800, on_est_day) == {
+             dt(~N[2019-11-03 07:23:00]),
              on_est_day
            }
 
@@ -275,6 +281,12 @@ defmodule DDNumerics.Metrics.Common.PeriodTest do
     # (There's currently no way to specify 01:23 EST.)
     assert Period.time_range({:weekly, :sun, "01:23", "America/Toronto"}, 1800, after_est) == {
              dt(~N[2019-11-03 05:23:00]),
+             after_est
+           }
+
+    # Last Sunday (EST day) at 02:23 EST (-5) = 07:23 UTC
+    assert Period.time_range({:weekly, :sun, "02:23", "America/Toronto"}, 1800, after_est) == {
+             dt(~N[2019-11-03 07:23:00]),
              after_est
            }
   end
